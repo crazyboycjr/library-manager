@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+
+{% block title %}Add Book{% endblock %}
+{% block headers %}{% endblock %}
+
+{% block content %}
+		<div class="panel panel-default margin-bottom-40">
+			<div class="panel-heading">
+				<h3 class="panel-title">书籍信息</h3>
+			</div>
+			<div class="panel-body">
+				<form action="/addbook" method="post" class="form-horizontal" role="form">
+					<div class="form-group">
+						<label for="inputISBN" class="col-lg-2 control-label">ISBN</label>
+						<div class="col-lg-10">
+							<input name="isbn" type="text" class="form-control" id="inputISBN" placeholder="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputName" class="col-lg-2 control-label">Bookname</label>
+						<div class="col-lg-10">
+							<input name="name" type="text" class="form-control" id="inputName" placeholder="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPress" class="col-lg-2 control-label">Press</label>
+						<div class="col-lg-10">
+							<input name="press" type="text" class="form-control" id="inputPress" placeholder="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputAuthor" class="col-lg-2 control-label">Author</label>
+						<div class="col-lg-10">
+							<input name="author" type="text" class="form-control" id="inputAuthor" placeholder="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputCostprice" class="col-lg-2 control-label">进价</label>
+						<div class="col-lg-10">
+							<input name="cost_price" type="text" class="form-control" id="inputCostprice" placeholder="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputBuyingCount" class="col-lg-2 control-label">进购数量</label>
+						<div class="col-lg-10">
+							<input name="buying_count" type="text" class="form-control" id="inputBuyingCount" placeholder="">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-offset-2 col-lg-5">
+							<button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+						</div>
+						<div class="col-lg-5">
+							<button type="reset" class="btn btn-lg btn-block">Reset</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+<!--
+      <form action="/login" method="post" class="form-signin">
+        <h2 class="form-signin-heading">Please log in</h2>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input name="username" type="username" id="inputUsername"class="form-control" placeholder="Username" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input name="passwd" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+      </form>
+-->
+{% endblock %}
+
+

@@ -135,16 +135,62 @@ module.exports.editUser = function *editUser(username, next) {
 }
 
 
+module.exports.listBook = function *listBook() {
+	let books = yield pool.query('select * from inventory');
+	this.body = yield render('books', { ctx : this, inventory : books });
+}
+
+
+module.exports.addBook = function *addBook() {
+	if (this.request.method == 'GET')
+		this.body = yield render('addbook', { ctx : this });
+	else {
+		let post = yield parse(this);
+		console.log(post);
+		if (post.isbn != undefined) {
+			post.isbn = post.isbn.replace(/-/g, '');
+		}
+		let rows = yield pool.query(`select max(id) as ret from purchase_list`);
+		post.id = rows[0].ret == null ? 0 : rows[0].ret + 1;
+		console.log(post.id);
+		post['status'] = '未付款';
+
+		rows = yield pool.query(`select date_format(now(), '%Y-%m-%d %T') as ret`);
+		post.create_time = rows[0].ret;
+		console.log(post.create_time);
+
+		console.log(`
+				insert into purchase_list
+				values(${post.id}, \'${post.isbn}\', \'${post.name}\',
+					\'${post.press}\', \'${post.author}\', ${post.cost_price},
+					${post.buying_count}, \'${post.status}\', \'${post.create_time}\')
+				`);
+		let result = yield pool.query(`
+				insert into purchase_list
+				values(${post.id}, \'${post.isbn}\', \'${post.name}\',
+					\'${post.press}\', \'${post.author}\', ${post.cost_price},
+					${post.buying_count}, \'${post.status}\', \'${post.create_time}\')
+				`);
+		console.log(result);
+		this.redirect('/');
+	}
+}
+
+module.exports.showPurchaseList = function *showPurchaseList() {
+	let rows = yield pool.query(`select * from purchase_list`);
+	rows[0].create_time = rows[0].create_time.toLocaleString();
+	console.log(rows[0].create_time);
+	this.body = yield render( 'purchaselist', { ctx : this, purchase_list : rows });
+}
 
 
 
+module.exports.pay = function *pay(book_id) {
+	
+}
 
-
-
-
-
-
-
+module.exports.cancelOrder = function *cancelOrder(book_id) {
+}
 
 
 

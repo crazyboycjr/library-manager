@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %}Books{% endblock %}
+
+{% block content %}
+  <div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+		<th>id</th>
+		<th>isbn</th>
+		<th>书名</th>
+		<th>出版社</th>
+		<th>作者</th>
+		<th>零售价</th>
+		<th>剩余数量</th>
+		<th>#<th>
+      </tr>
+    </thead>
+	<tbody>
+    {% for book in inventory %}
+      <tr >
+		  <td>{{ book.id }}</td>
+		  <td>{{ book.isbn }}</td>
+		  <td>{{ book.name}}</td>
+		  <td>{{ book.press }}</td>
+		  <td>{{ book.author }}</td>
+		  <td>{{ book.retail_price }}</td>
+		  <td>{{ book.count }}</td>
+		  <td><a class="btn btn-xs btn-info" href="/addbook/{{ book.id }}">列入进货清单</a></td>
+		  <td><a class="btn btn-xs btn-info" href="/book/{{ book.id }}/edit">书籍信息修改</a></td>
+	  </tr>
+    {% endfor %}
+	</tbody>
+  </table>
+  </div>
+<!--  <form action="/messages" method="post" id="message-form">
+    <textarea placeholder="Insert a message" name="message"
+      onkeydown="if (event.keyCode == 13) document.getElementById('message-form').submit();"></textarea>
+  </form>
+-->
+{% endblock %}
+

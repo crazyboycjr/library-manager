@@ -21,11 +21,16 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Help</a></li>
-			<li><a href="/user/{{ctx.session.user.username}}">Profile2</a></li>
+			<li><a href="/user/{{ctx.session.user.username}}">Profile</a></li>
 			{% if ctx.session.user.uid === 0 %}
 				<li><a href="/users">Users</a></li>
 				<li><a href="/adduser">Add user</a><li>
 			{% endif %}
+			<li><a href="/books">书籍查询</a></li>
+			<li><a href="/addbook">图书进货</a></li>
+			<li><a href="/addbook">进货清单</a></li>
+			<li><a href="#">购买书籍</a></li>
+			<li><a href="/bill">查看账单</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
 			<li><a href="/logout">Logout</a></li>

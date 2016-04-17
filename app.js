@@ -36,6 +36,31 @@ app.use(route.get('/adduser', routes.addUser));
 app.use(route.post('/adduser', checkLogin(SUPER_USER)));
 app.use(route.post('/adduser', routes.addUser));
 
+
+app.use(route.get('/books', checkLogin(NORMAL_USER)));
+app.use(route.get('/books', routes.listBook));
+
+app.use(route.get('/addbook', checkLogin(NORMAL_USER)));
+app.use(route.get('/addbook', routes.addBook));
+app.use(route.post('/addbook', checkLogin(NORMAL_USER)));
+app.use(route.post('/addbook', routes.addBook));
+
+app.use(route.get('/book/:book_id', checkLogin(NORMAL_USER)));
+app.use(route.get('/book/:book_id', routes.book));
+app.use(route.post('/book/:book_id/edit', checkLogin(NORMAL_USER)));
+app.use(route.post('/book/:book_id/edit', routes.editBook));
+
+app.use(route.get('/purchaselist', checkLogin(NORMAL_USER)));
+app.use(route.get('/purchaselist', routes.showPurchaseList));
+
+
+app.use(route.get('/pay/:book_id', checkLogin(NORMAL_USER)));
+app.use(route.get('/pay/:book_id', routes.pay));
+
+app.use(route.get('/cancel/:book_id', checkLogin(NORMAL_USER)));
+app.use(route.get('/cancel/:book_id', routes.cancelOrder));
+
+
 app.use(route.get('/login', checkNotLogin));
 app.use(route.get('/login', routes.login));
 app.use(route.post('/login', checkNotLogin));

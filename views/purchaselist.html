@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block title %}Purchase List{% endblock %}
+
+{% block content %}
+  <div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+		<th>ID</th>
+		<th>ISBN</th>
+		<th>书名</th>
+		<th>出版社</th>
+		<th>作者</th>
+		<th>进价</th>
+		<th>购买数量</th>
+		<th>状态</th>
+		<th>时间</th>
+		<th>#<th>
+      </tr>
+    </thead>
+	<tbody>
+    {% for book in purchase_list %}
+      <tr >
+		  <td>{{ book.id }}</td>
+		  <td>{{ book.isbn }}</td>
+		  <td>{{ book.name}}</td>
+		  <td>{{ book.press }}</td>
+		  <td>{{ book.author }}</td>
+		  <td>{{ book.cost_price }}</td>
+		  <td>{{ book.buying_count }}</td>
+		  <td>{{ book.status }}</td>
+		  <td>{{ book.create_time }}</td>
+		  {% if book.status == '未付款' %}
+			  <td><a class="btn btn-xs btn-info" href="/pay/:{{ book.id }}">付款</a></td>
+			  <td><a class="btn btn-xs btn-info" href="/cancel/:{{ book.id }}">退货</a></td>
+		  {% endif %}
+		  {% if book.status == '已付款' %}
+			  <td><a class="btn btn-xs btn-info" href="/addToInventory/:{{ book.id }}">添加新书</a></td>
+		  {% endif %}
+	  </tr>
+    {% endfor %}
+	</tbody>
+  </table>
+  </div>
+<!--  <form action="/messages" method="post" id="message-form">
+    <textarea placeholder="Insert a message" name="message"
+      onkeydown="if (event.keyCode == 13) document.getElementById('message-form').submit();"></textarea>
+  </form>
+-->
+{% endblock %}
+
+

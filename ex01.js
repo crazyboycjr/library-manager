@@ -14,6 +14,7 @@ var pool = mysql.createPool(options),
 
 co(function *() {
 	var rows = yield p.query('select * from users where username=\'123\'');
+	var rows = yield p.query('select max(id) as ret from inventory');
 	console.log(rows);
 	pool.end();
 })();

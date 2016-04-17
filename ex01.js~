@@ -13,7 +13,7 @@ var pool = mysql.createPool(options),
 	p = wrapper(pool);
 
 co(function *() {
-	var rows = yield p.query('select * from users');
+	var rows = yield p.query('select * from users where username=\'123\'');
 	console.log(rows);
 	pool.end();
 })();
