@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+  <div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+		<th>uid</th>
+		<th>username</th>
+		<th>realname</th>
+		<th>job_id</th>
+		<th>gender</th>
+		<th>age</th>
+		<th>#<th>
+      </tr>
+    </thead>
+	<tbody>
+    {% for user in users %}
+      <tr class="users">
+		  <td>{{ user.uid }}</td>
+		  <td>{{ user.username }}</td>
+		  <td>{{ user.realname }}</td>
+		  <td>{{ user.job_id }}</td>
+		  <td>{{ user.gender }}</td>
+		  <td>{{ user.age }}</td>
+		  <td><button class="btn btn-xs btn-info" href="/user/{{ user.username }}">Edit</button></td>
+	  </tr>
+    {% endfor %}
+	</tbody>
+  </table>
+  </div>
+<!--  <form action="/messages" method="post" id="message-form">
+    <textarea placeholder="Insert a message" name="message"
+      onkeydown="if (event.keyCode == 13) document.getElementById('message-form').submit();"></textarea>
+  </form>
+-->
+{% endblock %}

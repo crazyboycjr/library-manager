@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Library Manager {% block title %}Library{% endblock %}</title>
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	{% block headers %}{% endblock %}
+</head>
+<body style="padding-top:60px">
+	{% if ctx.session.user %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Library Manager</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Help</a></li>
+			<li><a href="/user/{{ctx.session.user.username}}">Profile</a></li>
+			{% if ctx.session.user.uid === 0 %}
+				<li><a href="/users">Users</a></li>
+				<li><a href="/adduser">Add user</a><li>
+			{% endif %}
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+			<li><a href="/logout">Logout</a></li>
+		  </ul>
+        </div>
+      </div>
+    </nav>
+	{% endif %}
+	<div class="container">
+    {% block content %}
+      <p>Forgot to add content?</p>
+    {% endblock %}
+	</div>
+  <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>
