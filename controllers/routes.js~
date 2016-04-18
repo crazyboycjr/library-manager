@@ -141,57 +141,118 @@ module.exports.listBook = function *listBook() {
 }
 
 
-module.exports.addBook = function *addBook() {
-	if (this.request.method == 'GET')
-		this.body = yield render('addbook', { ctx : this });
-	else {
-		let post = yield parse(this);
-		console.log(post);
-		if (post.isbn != undefined) {
-			post.isbn = post.isbn.replace(/-/g, '');
+module.exports.addBook = function *addBook(book_id) {
+	console.log(book_id);
+	if (book_id >= 0) {
+		let rows = yield pool.query(`select * from inventory where book_id = ${book_id}`);
+		if (!(rows.length == 0)) {
+			this.body = yield render('addbook', { ctx : this, book : rows[0], newBook : rows[0] })
 		}
-		let rows = yield pool.query(`select max(id) as ret from purchase_list`);
-		post.id = rows[0].ret == null ? 0 : rows[0].ret + 1;
-		console.log(post.id);
-		post['status'] = '未付款';
-
-		rows = yield pool.query(`select date_format(now(), '%Y-%m-%d %T') as ret`);
-		post.create_time = rows[0].ret;
-		console.log(post.create_time);
-
-		console.log(`
-				insert into purchase_list
-				values(${post.id}, \'${post.isbn}\', \'${post.name}\',
-					\'${post.press}\', \'${post.author}\', ${post.cost_price},
-					${post.buying_count}, \'${post.status}\', \'${post.create_time}\')
-				`);
-		let result = yield pool.query(`
-				insert into purchase_list
-				values(${post.id}, \'${post.isbn}\', \'${post.name}\',
-					\'${post.press}\', \'${post.author}\', ${post.cost_price},
-					${post.buying_count}, \'${post.status}\', \'${post.create_time}\')
-				`);
-		console.log(result);
-		this.redirect('/');
+	} else {
+		let rows = yield pool.query(`select * from inventory where book_id = (select max(book_id) from inventory)`);
+		if (!(rows.length == 0)) {
+			this.body = yield render('addbook', { ctx : this, book : rows[0] })
+		}
 	}
+}
+
+module.exports.doAddBook = function *doAddBook() {
+	let post = yield parse(this);
+	console.log(post);
+	if (post.isbn != undefined) {
+		post.isbn = post.isbn.replace(/-/g, '');
+	}
+	//let rows = yield pool.query(`select max(id) as ret from purchase_list`);
+	//post.id = rows[0].ret == null ? 0 : rows[0].ret + 1;
+	//console.log(post.id);
+	post['status'] = '未付款';
+
+	let rows = yield pool.query(`select date_format(now(), '%Y-%m-%d %T') as ret`);
+	post.create_time = rows[0].ret;
+	console.log(post.create_time);
+
+	console.log(`
+			insert into purchase_list
+			values(\'${post.book_id}\', \'${post.isbn}\', \'${post.name}\',
+				\'${post.press}\', \'${post.author}\', ${post.cost_price},
+				${post.buying_count}, \'${post.status}\', \'${post.create_time}\', null)
+			`);
+	let result = yield pool.query(`
+			insert into purchase_list
+			values(\'${post.book_id}\', \'${post.isbn}\', \'${post.name}\',
+				\'${post.press}\', \'${post.author}\', ${post.cost_price},
+				${post.buying_count}, \'${post.status}\', \'${post.create_time}\', null)
+			`);
+	console.log(result);
+	this.redirect('/purchaselist');
 }
 
 module.exports.showPurchaseList = function *showPurchaseList() {
 	let rows = yield pool.query(`select * from purchase_list`);
-	rows[0].create_time = rows[0].create_time.toLocaleString();
+	for (let i = 0; i < rows.length; i++)
+		rows[i].create_time = rows[i].create_time.toLocaleString();
 	console.log(rows[0].create_time);
 	this.body = yield render( 'purchaselist', { ctx : this, purchase_list : rows });
 }
 
 
 
-module.exports.pay = function *pay(book_id) {
-	
+module.exports.pay = function *pay(id, next) {
+	console.log(id);
+	let rows = yield pool.query(`select * from purchase_list where id = ${id}`);
+	// check if empty object;
+	if (!(rows.length == 0)) {
+		yield pool.query(`update purchase_list set status = '已付款' where id = ${id}`);
+	}
+	this.redirect('/purchaselist');
 }
 
-module.exports.cancelOrder = function *cancelOrder(book_id) {
+module.exports.cancelOrder = function *cancelOrder(id) {
+	console.log(id);
+	let rows = yield pool.query(`select * from purchase_list where id = ${id}`);
+	// check if empty object;
+	if (!(rows.length == 0)) {
+		yield pool.query(`update purchase_list set status = '已退货' where id = ${id}`);
+	}
+	this.redirect('/purchaselist');
 }
 
+module.exports.addToInventory = function *addToInventory(id) {
+	console.log(id);
+	let rows = yield pool.query(`select * from purchase_list where id = ${id}`);
+	if (!(rows.length == 0)) {
+		let book = yield pool.query(`select * from inventory where book_id = ${rows[0].book_id}`);
+		console.log(book);
+		if (book.length == 0) {
+			console.log(`
+					insert into inventory
+					values(${rows[0].book_id}, \'${rows[0].isbn}\', \'${rows[0].name}\',
+						\'${rows[0].press}\', \'${rows[0].author}\', ${rows[0].cost_price},
+						\'${rows[0].buying_count}\', null)
+					`);
+			yield pool.query(`
+					insert into inventory
+					values(${rows[0].book_id}, \'${rows[0].isbn}\', \'${rows[0].name}\',
+						\'${rows[0].press}\', \'${rows[0].author}\', ${rows[0].cost_price},
+						\'${rows[0].buying_count}\', null)
+					`);
+		} else {
+			console.log(`
+					update inventory
+					set count = count + ${rows[0].buying_count}
+					where book_id = ${rows[0].book_id}
+					`);
+			yield pool.query(`
+					update inventory
+					set count = count + ${rows[0].buying_count}
+					where book_id = ${rows[0].book_id}
+					`);
+		}
+
+		yield pool.query(`update purchase_list set status = '已添加至库存' where id = ${id}`);
+	}
+	this.redirect('/purchaselist');
+}
 
 
 

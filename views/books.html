@@ -20,15 +20,15 @@
 	<tbody>
     {% for book in inventory %}
       <tr >
-		  <td>{{ book.id }}</td>
+		  <td>{{ book.book_id }}</td>
 		  <td>{{ book.isbn }}</td>
 		  <td>{{ book.name}}</td>
 		  <td>{{ book.press }}</td>
 		  <td>{{ book.author }}</td>
 		  <td>{{ book.retail_price }}</td>
 		  <td>{{ book.count }}</td>
-		  <td><a class="btn btn-xs btn-info" href="/addbook/{{ book.id }}">列入进货清单</a></td>
-		  <td><a class="btn btn-xs btn-info" href="/book/{{ book.id }}/edit">书籍信息修改</a></td>
+		  <td><a class="btn btn-xs btn-info" href="/addbook/{{ book.book_id }}">列入进货清单</a></td>
+		  <td><a class="btn btn-xs btn-info" href="/book/{{ book.book_id }}/edit">书籍信息修改</a></td>
 	  </tr>
     {% endfor %}
 	</tbody>

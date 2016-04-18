@@ -7,8 +7,8 @@
   <table class="table table-striped">
     <thead>
       <tr>
-		<th>id</th>
-		<th>isbn</th>
+		<th>ID</th>
+		<th>ISBN</th>
 		<th>书名</th>
 		<th>出版社</th>
 		<th>作者</th>
@@ -20,7 +20,7 @@
 	<tbody>
     {% for book in inventory %}
       <tr >
-		  <td>{{ book.id }}</td>
+		  <td>{{ book.book_id }}</td>
 		  <td>{{ book.isbn }}</td>
 		  <td>{{ book.name}}</td>
 		  <td>{{ book.press }}</td>

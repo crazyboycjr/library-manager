@@ -22,7 +22,7 @@
 	<tbody>
     {% for book in purchase_list %}
       <tr >
-		  <td>{{ book.id }}</td>
+		  <td>{{ book.book_id }}</td>
 		  <td>{{ book.isbn }}</td>
 		  <td>{{ book.name}}</td>
 		  <td>{{ book.press }}</td>
@@ -32,11 +32,11 @@
 		  <td>{{ book.status }}</td>
 		  <td>{{ book.create_time }}</td>
 		  {% if book.status == '未付款' %}
-			  <td><a class="btn btn-xs btn-info" href="/pay/:{{ book.id }}">付款</a></td>
-			  <td><a class="btn btn-xs btn-info" href="/cancel/:{{ book.id }}">退货</a></td>
+			  <td><a class="btn btn-xs btn-info" href="/pay/{{ book.id }}">付款</a></td>
+			  <td><a class="btn btn-xs btn-info" href="/cancel/{{ book.id }}">退货</a></td>
 		  {% endif %}
 		  {% if book.status == '已付款' %}
-			  <td><a class="btn btn-xs btn-info" href="/addToInventory/:{{ book.id }}">添加新书</a></td>
+			  <td><a class="btn btn-xs btn-info" href="/add-to-inventory/{{ book.id }}">添加新书</a></td>
 		  {% endif %}
 	  </tr>
     {% endfor %}

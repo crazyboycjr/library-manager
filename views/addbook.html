@@ -11,39 +11,45 @@
 			<div class="panel-body">
 				<form action="/addbook" method="post" class="form-horizontal" role="form">
 					<div class="form-group">
+						<label for="inputBookID" class="col-lg-2 control-label">ID</label>
+						<div class="col-lg-10">
+							<input name="book_id" type="text" class="form-control" id="inputBookID" placeholder="{{book.book_id}}" value="{{newBook.book_id}}">
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="inputISBN" class="col-lg-2 control-label">ISBN</label>
 						<div class="col-lg-10">
-							<input name="isbn" type="text" class="form-control" id="inputISBN" placeholder="">
+							<input name="isbn" type="text" class="form-control" id="inputISBN" placeholder="{{book.isbn}}" value="{{newBook.isbn}}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputName" class="col-lg-2 control-label">Bookname</label>
 						<div class="col-lg-10">
-							<input name="name" type="text" class="form-control" id="inputName" placeholder="">
+							<input name="name" type="text" class="form-control" id="inputName" placeholder="{{book.name}}" value="{{newBook.name}}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputPress" class="col-lg-2 control-label">Press</label>
 						<div class="col-lg-10">
-							<input name="press" type="text" class="form-control" id="inputPress" placeholder="">
+							<input name="press" type="text" class="form-control" id="inputPress" placeholder="{{book.press}}" value="{{newBook.press}}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputAuthor" class="col-lg-2 control-label">Author</label>
 						<div class="col-lg-10">
-							<input name="author" type="text" class="form-control" id="inputAuthor" placeholder="">
+							<input name="author" type="text" class="form-control" id="inputAuthor" placeholder="{{book.author}}" value="{{newBook.author}}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputCostprice" class="col-lg-2 control-label">进价</label>
 						<div class="col-lg-10">
-							<input name="cost_price" type="text" class="form-control" id="inputCostprice" placeholder="">
+							<input name="cost_price" type="text" class="form-control" id="inputCostprice" placeholder="{{book.cost_price}}" value="{{newBook.retail_price}}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputBuyingCount" class="col-lg-2 control-label">进购数量</label>
 						<div class="col-lg-10">
-							<input name="buying_count" type="text" class="form-control" id="inputBuyingCount" placeholder="">
+							<input name="buying_count" type="text" class="form-control" id="inputBuyingCount" placeholder="1">
 						</div>
 					</div>
 					<div class="form-group">
