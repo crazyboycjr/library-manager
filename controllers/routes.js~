@@ -246,7 +246,7 @@ module.exports.buy = function *buy(book_id, next) {
 		rows[0].count -= post.count;
 	} else {
 		this.message = "There are no enough books in the inventory."
-		yield next;
+		return yield next;
 	}
 	console.log(rows[0]);
 	// check if empty object;
@@ -267,6 +267,7 @@ module.exports.buy = function *buy(book_id, next) {
 		yield pool.query(`update inventory set count = ${rows[0].count} where book_id = ${book_id}`);
 	}
 	//TODO: flash a success message
+	this.flash = { success : "success" };
 	this.redirect('/buybooks');
 }
 

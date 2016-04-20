@@ -4,6 +4,7 @@ const logger = require('koa-logger');
 const serve = require('koa-static');
 const route = require('koa-route');
 const session = require('koa-session');
+const flash = require('koa-flash');
 
 const koa = require('koa');
 const path = require('path');
@@ -15,6 +16,7 @@ app.use(logger());
 // Session
 app.keys = ['0123456789'];
 app.use(session(app));
+app.use(flash());
 
 const routes = require('./controllers/routes');
 
@@ -110,7 +112,9 @@ function checkLogin() {
 		if (this.session && this.session.user) {
 			if (this.session.user.uid <= privilege)
 				return yield next;
-			else this.message = 'You don\'t have the privilege.';
+			else {
+				this.message = 'You don\'t have the privilege.';
+			}
 		}
 		else this.message = 'You should logged in.'; //this.throw(403, 'You should logged in');
 	}
@@ -119,5 +123,7 @@ function checkLogin() {
 function *checkPrivilege(username, next) {
 	if (this.session && this.session.user && (this.session.user.username == username || this.session.user.uid == 0))
 		return yield next;
-	else this.message = 'You don\'t have the privilege.'
+	else {
+		this.message = 'You don\'t have the privilege.'
+	}
 }

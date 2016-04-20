@@ -28,16 +28,17 @@
 		  <td>{{ book.press }}</td>
 		  <td>{{ book.author }}</td>
 		  <td>{{ book.retail_price }}</td>
-		  <form method="post" action="/buy">
+		  <form method="post" action="/buy/{{ book.book_id }}">
 		  <td><input name="count" placeholder="1" value="1" style="width:100%;"></td>
 		  <td class="col-lg-3" align="center" style="width:18%">
-		  	  <button class="btn btn-xs btn-info" type="submit">购买此书</button>
+		  	  <button class="buybutton btn btn-xs btn-info" type="submit">购买此书</button>
 		  </td>
 		  </form>
 	  </tr>
     {% endfor %}
 	</tbody>
   </table>
+  <img src="https://img3.doubanio.com/mpic/s2395226.jpg">
   </div>
 {% endblock %}
 
@@ -46,6 +47,9 @@
 	<script>
 		$(document).ready(() => {
 			$("#inventory").dataTable();
+			$(".buybutton").click(function() {
+				alert('购买成功');
+			})
 		});
 	</script>
 {% endblock %}

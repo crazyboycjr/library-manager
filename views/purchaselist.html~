@@ -35,8 +35,10 @@
 		  <td>{{ book.create_time }}</td>
 		  <td>
 		  {% if book.status == '未付款' %}
+		  	<div class="row">
 			  <a class="btn btn-xs btn-info" href="/pay/{{ book.id }}">付款</a>
 			  <a class="btn btn-xs btn-info" href="/cancel/{{ book.id }}">退货</a>
+			</div>
 		  {% endif %}
 		  {% if book.status == '已付款' %}
 			  <a class="btn btn-xs btn-info" href="/add-to-inventory/{{ book.id }}">添加新书</a>

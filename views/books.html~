@@ -14,8 +14,8 @@
 		<th>书名</th>
 		<th>出版社</th>
 		<th>作者</th>
-		<th>单价</th>
-		<th>购买数量</th>
+		<th>零售价</th>
+		<th>剩余数量</th>
 		<th>#</th>
       </tr>
     </thead>
@@ -37,6 +37,7 @@
     {% endfor %}
 	</tbody>
   </table>
+  <img src="https://img3.doubanio.com/mpic/s2395226.jpg">
   </div>
 {% endblock %}
 
