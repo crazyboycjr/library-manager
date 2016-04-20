@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+
+{% block title %}Bill{% endblock %}
+
+{% block headers %}<link href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" rel="stylesheet">{% endblock %}
+
+{% block content %}
+  <div class="table-responsive">
+  <table id="bill" class="table table-striped">
+    <thead>
+      <tr>
+		<th>购买时间</th>
+		<th>收入/支出</th>
+		<th>书名</th>
+		<th>数量</th>
+		<th>购买者</th>
+      </tr>
+    </thead>
+	<tbody>
+    {% for b in bill %}
+      <tr class="users">
+		  <td>{{ b.buying_time }}</td>
+		  <td>{{ b.money }}</td>
+		  <td><a href="/book/{{ b.book_id }}">{{ b.name }}</a></td>
+		  <td>{{ b.amount }}</td>
+		  <td>{{ b.customer }}</td>
+	  </tr>
+    {% endfor %}
+	</tbody>
+  </table>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+ <script type="text/javascript" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(() => {
+			$("#bill").dataTable();
+			$("input[type='search']").parent().remove();
+			$("input[type='search']").remove();
+			$("#bill_filter").html(`
+					<form action="/queryTime" method="post" class="form-inline">
+					<div class="row col-xs-12">
+						<div class="form-group col-sm-2">
+							<label>时间:</label>
+						</div>
+						<div class="form-group col-sm-4">
+							<label for="from">From</label>
+							<input name="start" id="from" type="text" class="form-control input-sm" style="width:76%;">
+						</div>
+						<div class="form-group col-sm-4">
+							<label for="to">To</label>
+							<input name="end" id="to" type="text" class="form-control input-sm" style="width:76%;">
+						</div>
+						<div class="form-group col-sm-2">
+							<button type="submit" class="btn btn-sm btn-primary btn-block">确定</button>
+						</div>
+					</div>
+					</form>
+					`);
+			//$("input[type='search']").addClass("form-control").attr("id","searchbox");
+			//$("input[type='search']").parent().attr("for","searchbox").addClass("col-lg-12").addClass("control-label");
+		});
+	</script>
+{% endblock %}

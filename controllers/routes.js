@@ -135,9 +135,14 @@ module.exports.editUser = function *editUser(username, next) {
 }
 
 
-module.exports.listBook = function *listBook() {
+module.exports.listBook = function *listBooks() {
 	let books = yield pool.query('select * from inventory');
 	this.body = yield render('books', { ctx : this, inventory : books });
+}
+
+module.exports.buybooks = function *buybooks() {
+	let books = yield pool.query('select * from inventory where count > 0');
+	this.body = yield render('buybooks', { ctx : this, inventory : books });
 }
 
 
@@ -202,6 +207,19 @@ module.exports.pay = function *pay(id, next) {
 	let rows = yield pool.query(`select * from purchase_list where id = ${id}`);
 	// check if empty object;
 	if (!(rows.length == 0)) {
+		// TODO:consider more conditions?
+		let tmp = yield pool.query(`select date_format(now(), '%Y-%m-%d %T') as ret`);
+		console.log(tmp[0]);
+		console.log(`
+				insert into bill
+				values(\'${tmp[0].ret}\', -${rows[0].cost_price} * ${rows[0].buying_count}, \'${rows[0].book_id}\', ${rows[0].buying_count},
+					\'${this.session.user.username}\')
+				`);
+		yield pool.query(`
+				insert into bill
+				values(\'${tmp[0].ret}\', -${rows[0].cost_price} * ${rows[0].buying_count}, \'${rows[0].book_id}\', ${rows[0].buying_count},
+					\'${this.session.user.username}\')
+				`);
 		yield pool.query(`update purchase_list set status = '已付款' where id = ${id}`);
 	}
 	this.redirect('/purchaselist');
@@ -216,6 +234,42 @@ module.exports.cancelOrder = function *cancelOrder(id) {
 	}
 	this.redirect('/purchaselist');
 }
+
+module.exports.buy = function *buy(book_id, next) {
+	console.log(book_id);
+	let post = yield parse(this);
+	console.log(post);
+	let rows = yield pool.query(`select * from inventory where book_id = ${book_id}`);
+	post.count = Number(post.count);
+	console.log(rows[0].count, post.count);
+	if (rows[0].count >= post.count) {
+		rows[0].count -= post.count;
+	} else {
+		this.message = "There are no enough books in the inventory."
+		return yield next;
+	}
+	console.log(rows[0]);
+	// check if empty object;
+	if (!(rows.length == 0)) {
+		// TODO:consider more conditions?
+		let tmp = yield pool.query(`select date_format(now(), '%Y-%m-%d %T') as ret`);
+		console.log(tmp[0]);
+		console.log(`
+				insert into bill
+				values(\'${tmp[0].ret}\', ${rows[0].retail_price} * ${post.count}, \'${rows[0].book_id}\', ${post.count},
+					\'${this.session.user.username}\')
+				`);
+		yield pool.query(`
+				insert into bill
+				values(\'${tmp[0].ret}\', ${rows[0].retail_price} * ${post.count}, \'${rows[0].book_id}\', ${post.count},
+					\'${this.session.user.username}\')
+				`);
+		yield pool.query(`update inventory set count = ${rows[0].count} where book_id = ${book_id}`);
+	}
+	//TODO: flash a success message
+	this.redirect('/buybooks');
+}
+
 
 module.exports.addToInventory = function *addToInventory(id) {
 	console.log(id);
@@ -254,8 +308,57 @@ module.exports.addToInventory = function *addToInventory(id) {
 	this.redirect('/purchaselist');
 }
 
+module.exports.book = function *listBook(book_id) {
+	let book = yield pool.query(`select * from inventory where book_id = \'${book_id}\'`);
+	this.body = yield render('/book', { ctx : this, book : book[0] });
+}
+
+module.exports.editBook = function *editBook(book_id) {
+	let post = yield parse(this);
+	let rows = yield pool.query(`select * from inventory where book_id = \'${book_id}\'`);
+	if (!(rows.length == 0)) {
+		console.log(`
+				update inventory
+				set name = \'${post.name}\', press = \'${post.press}\',
+				author = \'${post.author}\', retail_price = \'${post.retail_price}\'
+				where book_id = \'${book_id}\'
+				`);
+		yield pool.query(`
+				update inventory
+				set name = \'${post.name}\', press = \'${post.press}\',
+				author = \'${post.author}\', retail_price = \'${post.retail_price}\'
+				where book_id = \'${book_id}\'
+				`);
+	}
+	this.redirect('/books');
+}
 
 
+module.exports.showBill = function *showBill() {
+	let rows = yield pool.query(`select * from bill natural join inventory`);
+	for (let i = 0; i < rows.length; i++)
+		rows[i].buying_time = rows[i].buying_time.toLocaleString();
+	this.body = yield render('/bill', { ctx : this, bill : rows });
+}
+
+module.exports.queryTime = function *queryTime() {
+	let post = yield parse(this);
+	console.log(post);
+	let rows;
+	if (post.start.length == 0 && post.end.length == 0) {
+		rows = yield pool.query(`select * from bill natural join inventory`);
+	} else if (post.start.length == 0) {
+		rows = yield pool.query(`select * from bill natural join inventory where buying_time <= \'${post.end}\'`);
+	} else if (post.end.length == 0) {
+		rows = yield pool.query(`select * from bill natural join inventory where buying_time >= \'${post.start}\'`);
+	} else {
+		rows = yield pool.query(`select * from bill natural join inventory where buying_time >= \'${post.start}\' and buying_time <= \'${post.end}\'`);
+	}
+	console.log(rows);
+	for (let i = 0; i < rows.length; i++)
+		rows[i].buying_time = rows[i].buying_time.toLocaleString();
+	this.body = yield render('/bill', { ctx : this, bill : rows });
+}
 
 
 
