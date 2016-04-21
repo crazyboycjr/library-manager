@@ -46,9 +46,10 @@
 	<script>
 		$(document).ready(() => {
 			$("#inventory").dataTable();
+			alert('sb');
 			$(".buybutton").click(function() {
 				alert('购买成功');
-			})
+			});
 		});
 	</script>
 {% endblock %}
