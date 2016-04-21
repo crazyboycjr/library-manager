@@ -62,11 +62,16 @@ module.exports.logout = function *logout() {
 	this.redirect('/');
 }
 
-module.exports.addUser = function *addUser() {
+module.exports.addUser = function *addUser(next) {
 	if (this.request.method == 'GET')
 		this.body = yield render('adduser', { ctx : this });
 	else {
 		let post = yield parse(this);
+		let count = yield pool.query(`select count(*) from users where username = \'${post.username}\'`);
+		if (post['passwd'] != post['passwd-repeat']) {
+			this.message = '密码不一致';
+			return yield next;
+		}
 		let rows = yield pool.query(`select max(uid) as ret from users`);
 		post.uid = rows[0].ret + 1;
 		post.passwd = bcrypt.hashSync(post.passwd);
@@ -267,7 +272,6 @@ module.exports.buy = function *buy(book_id, next) {
 		yield pool.query(`update inventory set count = ${rows[0].count} where book_id = ${book_id}`);
 	}
 	//TODO: flash a success message
-	this.flash = { success : "success" };
 	this.redirect('/buybooks');
 }
 

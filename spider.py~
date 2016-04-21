@@ -81,7 +81,11 @@ def get_isbn():
     else:
         return None
     isbn = p_isbn2.findall(isbn)
-    return isbn[0]
+    if (len(isbn) > 0):
+        isbn = isbn[0]
+    else:
+        return None
+    return isbn
 
 def get_img():
     global html
@@ -128,6 +132,10 @@ if __name__ == '__main__':
     init()
 
     fin = open("books.txt", "r")
+    begin = False
     for i in fin.readlines():
-        print i
-        crawl(i)
+        print i[:-1]
+        if (i[:-1] == "3577344"):
+            begin = True
+        if begin:
+            crawl(i[:-1])

@@ -9,7 +9,7 @@
 				<h3 class="panel-title">用户信息</h3>
 			</div>
 			<div class="panel-body">
-				<form action="/adduser" method="post" class="form-horizontal" role="form">
+				<form id="submitForm" action="/adduser" method="post" class="form-horizontal" role="form">
 					<div class="form-group">
 						<label for="inputUsername" class="col-lg-2 control-label">Username</label>
 						<div class="col-lg-10">
@@ -61,7 +61,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-lg-offset-2 col-md-5">
+						<div class="col-lg-offset-2 col-lg-5">
 							<button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
 						</div>
 						<div class="col-lg-5">
@@ -71,15 +71,19 @@
 				</form>
 			</div>
 		</div>
-<!--
-      <form action="/login" method="post" class="form-signin">
-        <h2 class="form-signin-heading">Please log in</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input name="username" type="username" id="inputUsername"class="form-control" placeholder="Username" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input name="passwd" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
-      </form>
--->
+
+{% endblock %}
+
+{% block scripts %}
+	<script>
+			$('#submitForm').submit(function(e) {
+				let passwd1 = $('#inputPassword1').val();
+				let passwd2 = $('#inputPassword2').val();
+				if (passwd1 != passwd2) {
+					alert('密码不一致');
+					return e.preventDefault();
+				}
+			});
+	</script>
 {% endblock %}
 

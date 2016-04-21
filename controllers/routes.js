@@ -62,11 +62,20 @@ module.exports.logout = function *logout() {
 	this.redirect('/');
 }
 
-module.exports.addUser = function *addUser() {
+module.exports.addUser = function *addUser(next) {
 	if (this.request.method == 'GET')
 		this.body = yield render('adduser', { ctx : this });
 	else {
 		let post = yield parse(this);
+		let count = yield pool.query(`select count(*) as ret from users where username = \'${post.username}\'`);
+		if (count.ret >= 1) {
+			this.message = '用户名重复';
+			return yield next;
+		}
+		if (post['passwd'] != post['passwd-repeat']) {
+			this.message = '密码不一致';
+			return yield next;
+		}
 		let rows = yield pool.query(`select max(uid) as ret from users`);
 		post.uid = rows[0].ret + 1;
 		post.passwd = bcrypt.hashSync(post.passwd);

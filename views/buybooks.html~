@@ -38,7 +38,6 @@
     {% endfor %}
 	</tbody>
   </table>
-  <img src="https://img3.doubanio.com/mpic/s2395226.jpg">
   </div>
 {% endblock %}
 

@@ -3,6 +3,7 @@
 <head>
 	<title>Library Manager {% block title %}Library{% endblock %}</title>
 	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="icon" href="/favicon32.ico">
 	{% block headers %}{% endblock %}
 </head>
 <body style="padding-top:60px">
@@ -20,17 +21,16 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Help</a></li>
-			<li><a href="/user/{{ctx.session.user.username}}">Profile</a></li>
+			<li {% if ctx.url.indexOf('user/')>=0 %}class="active"{% endif %}><a href="/user/{{ctx.session.user.username}}">Profile</a></li>
 			{% if ctx.session.user.uid === 0 %}
-				<li><a href="/users">Users</a></li>
-				<li><a href="/adduser">Add user</a><li>
+				<li {% if ctx.url.indexOf('users')>=0 %}class="active"{% endif %}><a href="/users">Users</a></li>
+				<li {% if ctx.url.indexOf('adduser')>=0 %}class="active"{% endif %}><a href="/adduser">Add user</a><li>
 			{% endif %}
-			<li><a href="/books">书籍查询</a></li>
-			<li><a href="/addbook">图书进货</a></li>
-			<li><a href="/purchaselist">进货清单</a></li>
-			<li><a href="/buybooks">购买书籍</a></li>
-			<li><a href="/bill">查看账单</a></li>
+			<li {% if ctx.url.indexOf('books')>=0 and ctx.url.indexOf('buy')<0 %}class="active"{% endif %}><a href="/books">书籍查询</a></li>
+			<li {% if ctx.url.indexOf('addbook')>=0 %}class="active"{% endif %}><a href="/addbook">图书进货</a></li>
+			<li {% if ctx.url.indexOf('purchaselist')>=0 %}class="active"{% endif %}><a href="/purchaselist">进货清单</a></li>
+			<li {% if ctx.url.indexOf('buybooks')>=0 %}class="active"{% endif %}><a href="/buybooks">购买书籍</a></li>
+			<li {% if ctx.url.indexOf('bill')>=0 %}class="active"{% endif %}><a href="/bill">查看账单</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
 			<li><a href="/logout">Logout</a></li>
@@ -41,18 +41,24 @@
 	{% endif %}
     <div class="container">
 
-	{% if ctx.flash %}
-	  <div class="alert alert-success alert-dismissible" role="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		{{ ctx.flash.error }}
-	  </div>
-	{% endif %}
 	{% block content %}
       <p>Forgot to add content?</p>
     {% endblock %}
+	<hr>
+	<footer>
+		<p>© <a href="#">crazyboycjr</a> 2016</p>	
+	</footer>
 	</div>
   <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>	
+  <script>
+	//$(document).ready(() => {
+		//$("#navbar ul li a").click(function() {
+			//$(this).parent().addClass("active");
+			//$(this).parent().addClass("active");
+		//})
+	//})
+  </script>
   {% block scripts %}
   {% endblock %}
 </body>

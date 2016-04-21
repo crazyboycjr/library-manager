@@ -55,7 +55,11 @@ def get_price():
     if (price.find('USD') >= 0 or price.find('$') >= 0):
         isdollor = True
     
-    price = p_price2.findall(price)[0]
+    price = p_price2.findall(price)
+    if (len(price) > 0):
+        price = price[0]
+    else:
+        return None
     if (isdollor):
         price = float(price) * 6.46613041
         price = round(price, 2)
@@ -81,7 +85,11 @@ def get_isbn():
     else:
         return None
     isbn = p_isbn2.findall(isbn)
-    return isbn[0]
+    if (len(isbn) > 0):
+        isbn = isbn[0]
+    else:
+        return None
+    return isbn
 
 def get_img():
     global html
@@ -128,6 +136,10 @@ if __name__ == '__main__':
     init()
 
     fin = open("books.txt", "r")
+    begin = False
     for i in fin.readlines():
         print i[:-1]
-        crawl(i[:-1])
+        if (i[:-1] == "3577344"):
+            begin = True
+        if begin:
+            crawl(i[:-1])
