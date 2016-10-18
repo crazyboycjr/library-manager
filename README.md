@@ -4,9 +4,9 @@
 其中 `create_table2.sql` 可以用来建立数据库，运行 `crawlers/spider.py` 可以向数据库中添加大量豆瓣图书内容。
 
 ## 依赖
-- node.js
+- Node.js
 - npm
-- mysql
+- MySQL
 
 ## 使用方法
 切换到源代码所在目录
@@ -16,9 +16,9 @@ node app.js
 ```
 
 ## 截图
-![](http://)
-![](http://)
-![](http://)
+![](https://github.com/crazyboycjr/library-manager/blob/master/screenshots/1.png)
+![](https://github.com/crazyboycjr/library-manager/blob/master/screenshots/2.png)
+![](https://github.com/crazyboycjr/library-manager/blob/master/screenshots/3.png)
 
 MIT License
 
