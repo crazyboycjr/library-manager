@@ -13,7 +13,7 @@ const bcrypt 	= require('bcrypt-nodejs');
 
 const options = {
 	host		: 'localhost',
-	user		: 'testuser',
+	user		: 'cjr',
 	password	: '',
 	database	: 'test'
 };
